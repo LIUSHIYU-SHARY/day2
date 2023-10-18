@@ -1,0 +1,79 @@
+#this is the name of the workflow
+
+name: My first workflow
+
+on:
+# any push will trigger this workflow
+- push
+
+ 
+
+jobs:
+
+  my_first_ci:
+
+    #from this point onwards is ubuntu
+
+    runs-on: ubuntu-latest
+
+ 
+
+    steps:
+
+    - name: get date in Github
+
+      id: get_date_in_github
+
+      run: echo "date in github $(date)"
+
+   
+
+    - name: checkout my source
+
+      id: check_out_my_source
+
+      uses: actions/checkout@v4
+
+   
+
+    - name: list directory
+
+      id: list_directory
+
+      run: echo "$(ls -l)"
+
+   
+
+    - name: echo github context
+
+      id: githun_context
+
+      run: echo "ref_name${{github.ref_name}}\n repository ${{github.repository}}\n owner ${{github.repository_owner}}"
+
+ 
+
+    - name: Send mail
+
+      id: send_email
+
+      uses: dawidd6/action-send-mail@v3
+
+      with:
+
+        server_address: ${{secrets.EMAIL_SERVER}}
+
+        server_port: ${{secrets.EMAIL_PORT}}
+
+        username: ${{secrets.EMAIL_USER}}
+
+        password: ${{secrets.EMAIL_PASSWORD}}
+
+        to: fcae6000-fbdb-416e-9719-545190551f57@mailslurp.mx
+
+        from: kianmun2306@gmail.com
+
+        subject: "Github workflow from ${{github.ref_name}}"
+
+        body: "The job is ${{job.status}}"
+
+ 
